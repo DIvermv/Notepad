@@ -34,6 +34,20 @@ int Open_File()
   file>> MyNote[current_element];
     current_element++;
    }
+   //
+        //если читаем бинарный файл (не текст), то стоит делать так:
+        //
+        //становимся в конец файла
+	//file.seekg(0,ios_base::end);
+        //Получаем текущую позицию  -  она же размер файла
+	//       int File_Size= file.tellg();
+	//file.seekg(0);// возвращаем на начало файла
+        //Создаем буффер размером в файл (здесь по идее надо разбить на блоки мегабайт по 8-16)
+        //если файл большой
+        //	char* buffer=new char[File_Size];
+        //Читаем в него сразу весь файл (если размер позволяет это сделать)
+        //	file.read(buffer,File_Size);
+   //
    str_count=current_element;
    file.close();
 
