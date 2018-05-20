@@ -1,6 +1,7 @@
 #include <cstring>
 #include <fstream>
 #include <ncurses.h>
+#include <clocale>
 using namespace std;
 int current_element=0; //номер текущего элемента
 string MyNote[256], Status;
@@ -108,6 +109,7 @@ int main (int argc, char *argv[])
 {
 //всё инициализируем
   initscr();
+  setlocale(LC_ALL, "Russian");// Почему-то не работает русский.
   start_color();
   keypad (stdscr, TRUE); 
   noecho();
@@ -163,9 +165,12 @@ int main (int argc, char *argv[])
 			    if ( curposX<strlen(MyNote[curposY].c_str()))// дальше конца строки не заходим
 				    curposX++;
                              break;
-//если нажата "BACKSPACE" - не сделано! нажимать нельзя
+//если нажата "BACKSPACE" - сделано!, но работает криво
                 case KEY_BACKSPACE: 
-		         MyNote[current_element]+=ch;	       
+			       for(int i=curposX;i<strlen(MyNote[curposY].c_str());i++)
+				       MyNote[curposY][i]=MyNote[curposY][i+1];
+                               curposX--;
+		      //   MyNote[current_element]+=ch;	       
                                 break;
 //обработка нажатия Enter - только добавление строки в конец, так не раздвинет строки
                  case '\n': 
