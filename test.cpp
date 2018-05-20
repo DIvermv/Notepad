@@ -1,9 +1,5 @@
-#include <iostream>
 #include <cstring>
 #include <fstream>
-#include <stdlib.h>
-#include <stdio.h>
-//#include <vector>
 #include <ncurses.h>
 using namespace std;
 int current_element=0; //номер текущего элемента
@@ -16,27 +12,23 @@ const char*  F_Name;
 
 int Open_File()
 {
-//	const char* F_Name="zenity --file-selection";
-       // const char* F_Name="text.txt";
           mvaddstr(0,0,"Input file name (default (press enter) - text.txt)");
        //	printw ("%s\n", "Input file name (default (press enter) - text.txt)");
 	char str[100];
        getstr(str); //Считываем строку
-        if(strlen(str)>3)
+        if(strlen(str)>3) //проверяем, если имя не введено - ставим text.txt
               F_Name=str;
 	else
               F_Name="text.txt";
-//	FILE * ptrFile = fopen("file.txt", "w");
 
-   ifstream file(F_Name,ios::in); 
-  // ifstream file("zenity --file-selection",ios::in); 
+   ifstream file(F_Name,ios::in);// открываем поток для чтения 
     if (!file) {// файл не открылся
      printw ("%s\n", "Do not open file. Press enter");
      getstr(str); //Считываем строку
 	    return 0;
               }
     current_element=0;
-   while(!file.eof())
+   while(!file.eof())// читаем, пока не достигнем конца файла
    {
    // getline(file,MyNote[current_element]);
   file>> MyNote[current_element];
@@ -49,8 +41,6 @@ int Open_File()
   Status="Open and read file ";
   for(int i=0;i<sizeof(F_Name);i++)
 	  Status+=F_Name[i];
- // strcat(Status,F_Name);
-  //     mvaddstr(LINES-1,0,"Open and read file text.txt");
 return 0;
 }
 
@@ -74,20 +64,18 @@ ofstream file(F_Name,ios::out);
 void update_screen()
 {
   erase(); //чистим экран
-//выводим все элементы вектора
+//выводим содержимое массива MyNote на экран построчно
   for (size_t i = 0; i < str_count; i++)
       {
-//если счетчик равен текущему элементу
            attron (COLOR_PAIR(2));
-          // printw ("%s\n", MyNote[i].c_str());
+          // printw ("%s\n", MyNote[i].c_str());// можно так для строки
 	   addstr(MyNote[i].c_str());
 	   addstr("\n");
-         //  printw ("%i\n", strlen(MyNote[i].c_str()));
+         //  printw ("%i\n", strlen(MyNote[i].c_str()));// или так для числа
            attroff (COLOR_PAIR(2));
       }
 
-       // Подписываем функциональные клавиши
-        char funk_key1[] = "F1 - Open File";
+       // Подписываем функциональные клавиши внизу экрана
            attron (COLOR_PAIR(3));
         	mvaddstr(LINES-2, (COLS/3-sizeof("F1 - Open File"))/2,"F1 - Open File");
            attroff (COLOR_PAIR(3));
@@ -98,7 +86,7 @@ void update_screen()
          	mvaddstr(LINES-2, (COLS/3-sizeof("F3 - Close File"))/2+COLS*2/3,"F3 - Close File");
            attroff (COLOR_PAIR(5));
            mvaddstr(LINES-1,0,Status.c_str());
-           move(curposY,curposX);// установка курсора на начало текста
+           move(curposY,curposX);// установка курсора на конец текста для дальнейшего ввода
 
 }
 //главная функция
@@ -117,38 +105,22 @@ int main (int argc, char *argv[])
   init_pair (4, COLOR_WHITE,   COLOR_BLUE);
   init_pair (5,  COLOR_WHITE,   COLOR_RED);
   
-  
-  //заполняем вектор тремя элементами
- // MyNote[0]="One";
- // MyNote[1]="Two";
- // MyNote[2]="Three";
- // str_count=3;
 //текущий элемент сбрасываем в ноль
   current_element = 0;
 //объявляем переменную для хранения нажатой клавиши
   int ch = 0;
-  // WINDOW *win = newwin(height, width, offsety, offsetx);
-
-//   WINDOW *win = newwin(10, 10, 10, 10);
-
-  //  box(win, 5, 5);
-
-   // wrefresh(win);
-   // getch(); 
-//считываем клавиши, пока не будет нажата 'F3'  
+//считываем клавиши, пока не будет нажата 'F3' (по F3 - выход) 
   while (ch != KEY_F(3))
         {
          //обновляем экран
          update_screen();
-         
+         mousemask (ALL_MOUSE_EVENTS, NULL);// инициализируем считывание мыши
          //ожидаем нажатия на клавишу и 
          //получаем её код в ch
-           mousemask (ALL_MOUSE_EVENTS, NULL);
          ch = getch();
  
          switch (ch)
                 {
-
 //если нажата "F1", то открываем файл
                  case KEY_F(1): 
                              Open_File();
@@ -174,44 +146,43 @@ int main (int argc, char *argv[])
                              break;
 //если нажата "вправо"
                 case KEY_RIGHT: 
-			    if ( curposX<sizeof(MyNote[curposY]))
+			    if ( curposX<strlen(MyNote[curposY].c_str()))// дальше конца строки не заходим
 				    curposX++;
                              break;
-//если нажата "вниз", то увеличиваем current_element
+//если нажата "BACKSPACE" - не сделано! нажимать нельзя
                 case KEY_BACKSPACE: 
 		         MyNote[current_element]+=ch;	       
                                 break;
-//обработка нажатия Enter
+//обработка нажатия Enter - только добавление строки в конец, так не раздвинет строки
                  case '\n': 
                                str_count++;
-                              // list[current_element];//пользователь выбрал элемент
                                break;
+// обработка нажатия мыши - не контролирует, какая клавиши нажата, только факт нажатия			       
 	         case  KEY_MOUSE:
                                if (getmouse(&event) == OK)
-                               //    if (event.bstate & BUTTON1_PRESSED)
 			          if(event.y==LINES-2) // попали в функциональные клавиши
 				     if(event.x<COLS/3) // F1
                                         Open_File();
-
 				     if((event.x>COLS/3)&&(event.x<COLS*2/3)) // F2
                                         File_Save();
 				     if(event.x>COLS*2/3) // F3
                                         ch = KEY_F(3);
-				  else	  
+				  else	 // просто установим курсор туда, куда попала мышь 
 				   {                                        
                                     curposY=event.y;
 			            curposX=event.x;
 				   }
                               break;
+// все остальные клавиши			      
 		default  :
-			      if(curposX<(strlen(MyNote[curposY].c_str())))
+			      if(curposX<(strlen(MyNote[curposY].c_str())))// если в строке - то заменяем
 				      MyNote[curposY][curposX]=ch;	      
 			      else
-				   MyNote[curposY]+=ch;   
+				   MyNote[curposY]+=ch;   // в конец строки - дописываем
 			       curposX++; 
                                break;
                 }
         }     
-  endwin();
+  endwin();// разрушаем окно
   return 0;
 }
