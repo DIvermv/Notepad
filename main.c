@@ -1,6 +1,7 @@
 
 #include "func.h"
 
+#include <ncurses.h>
 // int current_element=0; //номер текущего элемента
 // string MyNote[256], Status;
 // int str_count;
@@ -9,6 +10,11 @@
 //главная функция
 int main (int argc, char *argv[])
 {
+int current_element; //номер текущего элемента
+string MyNote[256], Status;
+int str_count;
+int curposX,curposY;
+const char*  F_Name;
 //всё инициализируем
   initscr();
   setlocale(LC_ALL, "Russian");// Почему-то не работает русский.

@@ -1,9 +1,16 @@
 #include "func.h"
 
+#include <fstream>
 
+#include <ncurses.h>
 
 int Open_File()
 {
+int current_element; //номер текущего элемента
+string MyNote[256], Status;
+int str_count;
+int curposX,curposY;
+const char*  F_Name;
           mvaddstr(0,0,"Input file name (default (press enter) - text.txt)");
        //	printw ("%s\n", "Input file name (default (press enter) - text.txt)");
 	char str[100];
@@ -53,6 +60,11 @@ return 0;
 
 int File_Save()
 {
+int current_element; //номер текущего элемента
+string MyNote[256], Status;
+int str_count;
+int curposX,curposY;
+const char*  F_Name;
 ofstream file(F_Name,ios::out);
      current_element=0;
      while(current_element<str_count)

@@ -1,8 +1,14 @@
 #include "func.h"
 
+#include <ncurses.h>
 
 void update_screen()
 {
+int current_element; //номер текущего элемента
+string MyNote[256], Status;
+int str_count;
+int curposX,curposY;
+const char*  F_Name;
   erase(); //чистим экран
 //выводим содержимое массива MyNote на экран построчно
   for (size_t i = 0; i < str_count; i++)
