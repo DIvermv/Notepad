@@ -1,17 +1,17 @@
 #ifndef FUNC_H
 #define FUNC_H
-#include <cstring>
+#include <string.h>
 #include <ncurses.h>
-#include <clocale>
-#include <fstream>
-using namespace std;
-extern int current_element; //номер текущего элемента
-extern string MyNote[256], Status;
-extern int str_count;
-extern int curposX,curposY;
-extern const char*  F_Name;
-//void update_screen(string* MyNote);
-int Open_File();
-int File_Save();
-void update_screen();
+#include <stdio.h>
+//extern int current_element; //номер текущего элемента
+struct My_Note {
+	char note[256][1024];// собственно блокнот
+	int str_count;// число строк в блокноте
+        const char*  F_Name;// исходный файл
+        const  char* Status;
+               }; 
+//extern int curposX,curposY;
+struct My_Note  Open_File();
+struct My_Note  File_Save(struct My_Note);
+void update_screen(struct My_Note);
 #endif
