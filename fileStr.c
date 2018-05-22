@@ -36,7 +36,7 @@ getsyx(curposY, curposX);
 
   curposX=0,curposY=MyNote.str_count-1;
  
- MyNote.Status="Open and read file Text.txt";
+    MyNote.Status="Open and read file ";
 return MyNote;
 }
 
@@ -59,8 +59,6 @@ int curposX,curposY;
                  current_element++;
      }
      fclose(Notefile);
-    MyNote.Status="Text saved to file Text.txt";
- // for(int i=0;i<sizeof(F_Name);i++)
- //	  Status+=F_Name[i];
+    MyNote.Status="Text saved to file ";
 	    return MyNote;
 }

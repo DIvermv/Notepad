@@ -30,6 +30,7 @@ getsyx(curposY, curposX);
          	mvaddstr(LINES-2, (COLS/3-sizeof("F3 - Close File"))/2+COLS*2/3,"F3 - Close File");
            attroff (COLOR_PAIR(5));
            mvaddstr(LINES-1,0,MyNote.Status);
+	   addstr(MyNote.F_Name);
            move(curposY,curposX);// установка курсора на конец текста для дальнейшего ввода
 
 

@@ -6,10 +6,10 @@ int main (int argc, char *argv[])
 int current_element; //номер текущего элемента
 struct My_Note MyNote;
        MyNote.str_count=0;
+       MyNote.Status=NULL;
 int curposX,curposY;
 //всё инициализируем
   initscr();
-//  setlocale(LC_ALL, "Russian");// Почему-то не работает русский.
   start_color();
   keypad (stdscr, TRUE); 
   noecho();
@@ -32,9 +32,9 @@ MEVENT event;
          //обновляем экран
          update_screen(MyNote);  
          mousemask (ALL_MOUSE_EVENTS, NULL);// инициализируем считывание мыши
+	 move(curposY,curposX);// выставляем курсор
          //ожидаем нажатия на клавишу и 
          //получаем её код в ch
-	 move(curposY,curposX);
          ch = getch();
  
          switch (ch)
@@ -67,7 +67,7 @@ MEVENT event;
 			    if (curposX<strlen(MyNote.note[curposY])-1)// дальше конца строки не заходим
 				    curposX++;
                              break;
-//если нажата "BACKSPACE" - сделано!, но работает криво
+//если нажата "BACKSPACE"
                 case KEY_BACKSPACE: 
 			     if(curposX>0)
 			     {     
@@ -75,7 +75,6 @@ MEVENT event;
 				       MyNote.note[curposY][i]=MyNote.note[curposY][i+1];
                                curposX--;
 			     }
-		      //   MyNote[current_element]+=ch;	       
                                 break;
 //обработка нажатия Enter - только добавление строки в конец, так не раздвинет строки
                  case '\n': 

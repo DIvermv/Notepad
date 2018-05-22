@@ -8,7 +8,7 @@ struct My_Note {
 	char note[256][1024];// собственно блокнот
 	int str_count;// число строк в блокноте
         const char*  F_Name;// исходный файл
-        const  char* Status;
+        const char* Status;
                }; 
 //extern int curposX,curposY;
 struct My_Note  Open_File();
